@@ -83,6 +83,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d("TAG", "delete: "+location);
         db.delete("place","LOCATION='"+location+"'",null);
+       // mAdapter.notifyDataSetChanged();
     }
 
 }

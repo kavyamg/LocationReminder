@@ -55,15 +55,12 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void setUpRecView() {
-//        recyclerView = (RecyclerView) findViewById(R.id.recView);
         recyclerView = (RecyclerView) findViewById(R.id.recView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(StartActivity.this);
-//        RecyclerView.LayoutManager grid = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL);
+       RecyclerView.LayoutManager grid = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(new MyAdapter());
-
-
     }
 
 
