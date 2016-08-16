@@ -62,32 +62,19 @@ public class MapsActivity extends FragmentActivity implements
     Address address;
     EditText location_tf;
     ArrayList<DbHelper.data> array= new ArrayList<>();
-
     protected ArrayList<Geofence> mGeofenceList;
     protected GoogleApiClient mGoogleApiClient;
-    private Button mAddGeofencesButton;
-
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-
         dbhelp = new DbHelper(this);
         dbhelp.getWritableDatabase();
         setUpMapIfNeeded();
-
-        //setContentView(R.layout.);
-        mAddGeofencesButton = (Button) findViewById(R.id.add_geofences_button);
-        // Empty list for storing geofences.
         mGeofenceList = new ArrayList<Geofence>();
-        populateGeofenceList();
 
-        // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
 
 
@@ -97,7 +84,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-    }
+           }
 
 
     public void onSearch(View view) {
@@ -133,8 +120,9 @@ public class MapsActivity extends FragmentActivity implements
 
                         mMap.addMarker(new MarkerOptions().position(latLng).title(txt1));
                         dbhelp.insert(location, txt1);
-                        Constants.LANDMARKS.put(txt1,new LatLng (address.getLatitude(),address.getLongitude()));
+                        Constants.LANDMARKS.put(location,new LatLng (address.getLatitude(),address.getLongitude()));
                         Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                        populateGeofenceList();
                         addGeofencesButtonHandler();
 
                     }
@@ -151,8 +139,6 @@ public class MapsActivity extends FragmentActivity implements
             } catch (IndexOutOfBoundsException e){
                 Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
             }
-
-            //c.HashMap
 
         }
     }
@@ -197,7 +183,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     private void setUpMap() {
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -206,11 +192,7 @@ public class MapsActivity extends FragmentActivity implements
         }
     
 
-    public void next(View view) {
 
-        Intent intent = new Intent(MapsActivity.this, MainActivity.class);
-        startActivity(intent);
-    }
 
 
 
@@ -232,7 +214,7 @@ public class MapsActivity extends FragmentActivity implements
                             entry.getValue().longitude,
                             Constants.GEOFENCE_RADIUS_IN_METERS
                     )
-                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                             Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
@@ -273,6 +255,8 @@ public class MapsActivity extends FragmentActivity implements
 
     public void addGeofencesButtonHandler() {
 
+        for (int i=0;i<mGeofenceList.size();i++)
+            Log.d("TAG1", "addGeofencesButtonHandler: "+mGeofenceList.get(i));
         if (!mGoogleApiClient.isConnected()) {
 
             Toast.makeText(this, "Google API Client not connected!", Toast.LENGTH_SHORT).show();
@@ -280,6 +264,7 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         try {
+
             LocationServices.GeofencingApi.addGeofences(
                     mGoogleApiClient,
                     getGeofencingRequest(),
@@ -317,6 +302,13 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
+    public void next(View view) {
+        Intent intent = new Intent(MapsActivity.this,StartActivity.class);
+        startActivity(intent);
 
     }
 }

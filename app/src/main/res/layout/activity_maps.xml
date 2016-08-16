@@ -62,11 +62,11 @@
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_play_arrow_black_24dp"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
             android:onClick="next"
-            android:layout_gravity="right"
+            android:layout_gravity="left"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentStart="true" />
         </RelativeLayout>
 
     </LinearLayout>

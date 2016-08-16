@@ -29,7 +29,6 @@
 
         <service android:name=".GeofenceTransitionsIntentService" />
 
-        <activity android:name=".MainActivity" />
         <activity
             android:name=".StartActivity"
             android:label="@string/title_activity_start"

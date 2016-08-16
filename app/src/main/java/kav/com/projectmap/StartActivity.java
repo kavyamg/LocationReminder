@@ -2,8 +2,11 @@ package kav.com.projectmap;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,16 +17,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        ResultCallback<Status> {
     public DbHelper dbhelp;
     ArrayList<DbHelper.data> array1 = new ArrayList<>();
-    ArrayList<String> list = new ArrayList<>();
+    ArrayList<String> list ;
     ArrayList<String> address = new ArrayList<>();
-
+    public  ArrayList<String> listgeo = new ArrayList<>();
+    protected GoogleApiClient mGoogleApiClient;
     RecyclerView recyclerView;
 
     @Override
@@ -32,6 +46,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        listgeo = new ArrayList<>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -44,14 +59,24 @@ public class StartActivity extends AppCompatActivity {
         dbhelp = new DbHelper(this);
         dbhelp.getWritableDatabase();
 
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        list = new ArrayList<>();
+
         array1 = dbhelp.getAllLabels();
         for (int i = 0; i < array1.size(); i++) {
             list.add("Location : " + array1.get(i).a + "\n"+"Message : " + array1.get(i).s);
             Log.d("TAG", "onCreate: " + array1.get(i).a);
             address.add(array1.get(i).a);
         }
-
         setUpRecView();
+
     }
 
     private void setUpRecView() {
@@ -63,17 +88,31 @@ public class StartActivity extends AppCompatActivity {
         recyclerView.setAdapter(new MyAdapter());
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+
+    }
+
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
 
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-//
-//            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.single_view,parent,false);
-//            Holder mHolder= new Holder(view);
-//
-//            return mHolder;
-//
             return new Holder(LayoutInflater.from(StartActivity.this).inflate(R.layout.single_view, parent, false));
         }
 
@@ -85,6 +124,14 @@ public class StartActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     dbhelp.delete(address.get(position));
+                    listgeo.add(address.get(position));
+                    for (int i=0;i<listgeo.size();i++)
+                    {
+                        Log.d("tagnew","deleted :"+listgeo.get(i));
+                    }
+                    //LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,listgeo);
+                    list.remove(position);
+                    notifyDataSetChanged();
                 }
             });
 
@@ -98,14 +145,14 @@ public class StartActivity extends AppCompatActivity {
         public class Holder extends RecyclerView.ViewHolder {
 
             TextView textView;
-            Button button;
+            ImageView button;
 
 
             public Holder(View itemView) {
                 super(itemView);
 
                 textView = (TextView) itemView.findViewById(R.id.text);
-                button = (Button) itemView.findViewById(R.id.del);
+                button = (ImageView) itemView.findViewById(R.id.del);
 
             }
         }

@@ -51,19 +51,21 @@ public class GeofenceTransitionsIntentService extends IntentService {
         return String.format("%s: %s", "Message", TextUtils.join(", ", triggeringIDs));
     }
 
+
+
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts MainActivity.
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), StartActivity.class);
 
         // Get a PendingIntent containing the entire back stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class).addNextIntent(notificationIntent);
+        stackBuilder.addParentStack(StartActivity.class).addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Get a notification builder that's compatible with platform versions >= 4
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        long[] pattern = {500,500,500,500,500,500,500,500,500,500,500,500,500};
+        long[] pattern = {500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,5000,500};
         // Define the notification settings.
         builder.setColor(Color.WHITE)
                 .setSmallIcon(R.mipmap.location_map_pin_turquoise_blue8)
@@ -73,8 +75,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 //.setAutoCancel(true)
                 .setVibrate(pattern )
                 .setLights(Notification.DEFAULT_LIGHTS,1000,500)
-                .setDefaults(Notification.DEFAULT_SOUND);
-                //.setFullScreenIntent( ,true);
+                .setDefaults(Notification.DEFAULT_SOUND)
+        .setFullScreenIntent(notificationPendingIntent,true);
+
+
 
 
         // Fire and notify the built Notification.
