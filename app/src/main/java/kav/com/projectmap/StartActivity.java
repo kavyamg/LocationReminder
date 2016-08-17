@@ -164,7 +164,7 @@ public class StartActivity extends AppCompatActivity implements
                     {
                         Log.d("tagnew","added :"+listgeo.get(i));
                     }
-                //LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,listgeo);
+                LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,listgeo);
                 list.remove(getAdapterPosition());
                 address.remove(getAdapterPosition());
                 notifyDataSetChanged();
