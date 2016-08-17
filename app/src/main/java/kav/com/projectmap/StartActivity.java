@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,9 +31,9 @@ public class StartActivity extends AppCompatActivity implements
         ResultCallback<Status> {
     public DbHelper dbhelp;
     ArrayList<DbHelper.data> array1 = new ArrayList<>();
-    ArrayList<String> list ;
+    ArrayList<String> list;
     ArrayList<String> address = new ArrayList<>();
-    public  ArrayList<String> listgeo = new ArrayList<>();
+    public ArrayList<String> listgeo = new ArrayList<>();
     protected GoogleApiClient mGoogleApiClient;
     RecyclerView recyclerView;
 
@@ -120,20 +117,21 @@ public class StartActivity extends AppCompatActivity implements
         public void onBindViewHolder(Holder holder, final int position) {
             Log.d("TAG", "onBindViewHolder: "+list.get(position));
             holder.textView.setText(list.get(position));
-            holder.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dbhelp.delete(address.get(position));
-                    listgeo.add(address.get(position));
-                    for (int i=0;i<listgeo.size();i++)
-                    {
-                        Log.d("tagnew","deleted :"+listgeo.get(i));
-                    }
-                    //LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,listgeo);
-                    list.remove(position);
-                    notifyDataSetChanged();
-                }
-            });
+//            holder.button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dbhelp.delete(address.get(position));
+//                    list.remove(position);
+//                    notifyDataSetChanged();
+//                    listgeo.add(address.get(position));
+//                    for (int i=0;i<listgeo.size();i++)
+//                    {
+//                        Log.d("tagnew","deleted :"+listgeo.get(i));
+//                    }
+//                    //LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,listgeo);
+//
+//                }
+//            });
 
         }
 
@@ -142,11 +140,10 @@ public class StartActivity extends AppCompatActivity implements
             return list.size();
         }
 
-        public class Holder extends RecyclerView.ViewHolder {
+        public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             TextView textView;
             ImageView button;
-
 
             public Holder(View itemView) {
                 super(itemView);
@@ -154,9 +151,25 @@ public class StartActivity extends AppCompatActivity implements
                 textView = (TextView) itemView.findViewById(R.id.text);
                 button = (ImageView) itemView.findViewById(R.id.del);
 
+                button.setOnClickListener(this);
+
+            }
+
+            @Override
+            public void onClick(View v) {
+                Log.d("TAG", "onClick: " + getAdapterPosition());
+                dbhelp.delete(address.get(getAdapterPosition()));
+                listgeo.add(address.get(getAdapterPosition()));
+                for (int i=0;i<listgeo.size();i++)
+                    {
+                        Log.d("tagnew","added :"+listgeo.get(i));
+                    }
+                //LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,listgeo);
+                list.remove(getAdapterPosition());
+                address.remove(getAdapterPosition());
+                notifyDataSetChanged();
             }
         }
-
     }
 
 }

@@ -48,7 +48,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         for (Geofence geofence : event.getTriggeringGeofences()) {
             triggeringIDs.add(geofence.getRequestId());
         }
-        return String.format("%s: %s", "Message", TextUtils.join(", ", triggeringIDs));
+        return String.format("%s: %s", "You are at : ", TextUtils.join(", ", triggeringIDs));
     }
 
 
