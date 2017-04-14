@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">projectmap</string>
+    <string name="app_name">forget me not</string>
     <string name="title_activity_maps">Map</string>
     <string name="app_title">Are We There Yet?</string>
     <string name="action_delete_all">Delete All Geofences</string>

@@ -32,6 +32,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -69,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+       // builder.setAlwaysShow(true);
         setContentView(R.layout.activity_maps);
         dbhelp = new DbHelper(this);
         dbhelp.getWritableDatabase();
@@ -120,7 +123,7 @@ public class MapsActivity extends FragmentActivity implements
 
                         mMap.addMarker(new MarkerOptions().position(latLng).title(txt1));
                         dbhelp.insert(location, txt1);
-                        Constants.LANDMARKS.put(location,new LatLng (address.getLatitude(),address.getLongitude()));
+                        Constants.LANDMARKS.put(txt1,new LatLng (address.getLatitude(),address.getLongitude()));
                         Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
                         populateGeofenceList();
                         addGeofencesButtonHandler();
@@ -137,6 +140,8 @@ public class MapsActivity extends FragmentActivity implements
                 alertbox.show();
 
             } catch (IndexOutOfBoundsException e){
+                Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+            } catch (NullPointerException e){
                 Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
             }
 
@@ -309,6 +314,7 @@ public class MapsActivity extends FragmentActivity implements
     public void next(View view) {
         Intent intent = new Intent(MapsActivity.this,StartActivity.class);
         startActivity(intent);
+        finish();
 
     }
 }

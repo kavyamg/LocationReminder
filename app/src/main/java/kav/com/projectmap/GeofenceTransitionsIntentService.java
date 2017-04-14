@@ -36,6 +36,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             return;
          }
         String description = getGeofenceTransitionDetails(event);
+        Log.d(TAG, "onHandleIntent: "+event);
         sendNotification(description);
     }
 
@@ -44,11 +45,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
     private static String getGeofenceTransitionDetails(GeofencingEvent event) {
         String transitionString =
                 GeofenceStatusCodes.getStatusCodeString(event.getGeofenceTransition());
+        Log.d(TAG, "getGeofenceTransitionDetails: "+transitionString);
         List triggeringIDs = new ArrayList();
         for (Geofence geofence : event.getTriggeringGeofences()) {
             triggeringIDs.add(geofence.getRequestId());
+            Log.d(TAG, "getGeofenceTransitionDetails: "+geofence);
         }
-        return String.format("%s: %s", "You are at : ", TextUtils.join(", ", triggeringIDs));
+        return String.format("%s: %s", "Message  ", TextUtils.join(", ", triggeringIDs));
     }
 
 
@@ -75,8 +78,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 //.setAutoCancel(true)
                 .setVibrate(pattern )
                 .setLights(Notification.DEFAULT_LIGHTS,1000,500)
-                .setDefaults(Notification.DEFAULT_SOUND)
-        .setFullScreenIntent(notificationPendingIntent,true);
+                .setDefaults(Notification.DEFAULT_SOUND);
+       // .setFullScreenIntent(notificationPendingIntent,true);
 
 
 
